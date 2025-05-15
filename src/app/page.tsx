@@ -14,7 +14,7 @@ const Index: React.FC = () => {
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold mb-4">Como Funciona</h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            O Esperto Comparador ajuda você a encontrar os melhores preços em diferentes 
+            O Comparador online ajuda você a encontrar os melhores preços em diferentes 
             supermercados de forma simples e eficiente.
           </p>
         </div>

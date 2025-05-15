@@ -13,7 +13,7 @@ const HeroSection: React.FC = () => {
               Compare preços e economize nas compras
             </h1>
             <p className="text-lg text-gray-600 mb-8">
-              O Esperto Comparador ajuda você a encontrar os melhores preços em diferentes 
+            O Comparador online ajuda você a encontrar os melhores preços em diferentes 
               supermercados, economizando tempo e dinheiro em suas compras.
             </p>
             <div className="flex space-x-4">
