@@ -9,7 +9,9 @@ import PriceTable from "@/components/PriceTable";
 import BestPricesByStore from "@/components/BestPricesByStore";
 import { ComparisonData, Product, ProductFormData, Store } from "@/lib/types";
 import { toast } from "sonner";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+const LOCAL_STORAGE_KEY = "comparasionAppData"
 
 const ComparisonForm: React.FC = () => {
   const [comparisonData, setComparisonData] = useState<ComparisonData>({
@@ -20,6 +22,38 @@ const ComparisonForm: React.FC = () => {
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<ProductFormData | undefined>(undefined);
   const [editingProductIndex, setEditingProductIndex] = useState<number | null>(null);
+  
+  
+  //Carregar dados do localStorage ao montar o componente
+  useEffect(() => {
+    try {
+      const savedData = localStorage.getItem(LOCAL_STORAGE_KEY);
+      if(savedData) {
+        const parsedData = JSON.parse(savedData);
+
+        if(parsedData.date) {
+          parsedData.date = new Date(parsedData.date);
+        }
+        setComparisonData(parsedData);
+      }
+    } catch(erro){
+      console.error("Erro ao carregar dados do localStorage:", error);
+      toast({
+        title: "Error ao carregar dados",
+        description: "Não foi possível carregar os dados slavos anteriormente.",
+        variant: "destructive",
+      });
+    }
+  }, []);
+
+  //Salvar dados no localStorage sempre que comparisonDate mudar
+  useEffect(() => {
+    try {
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(comparisonData));
+    } catch (error) {
+      console.error("Erro ao salvar dados no localStorage:", error);
+    }
+  }, [comparisonData]);
 
   const handleAddStore = () => {
     if (!storeName.trim()) {

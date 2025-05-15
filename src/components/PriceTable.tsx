@@ -16,7 +16,8 @@ const PriceTable: React.FC<PriceTableProps> = ({ comparisonData }) => {
     stores.forEach((store) => {
       let storeTotal = 0;
       products.forEach((product) => {
-        if (product.prices[store.id]) {
+        // Considerar apenas preços definidos e maiores que zero para o total da loja
+        if (product.prices[store.id] !== undefined && product.prices[store.id] > 0) {
           storeTotal += product.prices[store.id];
         }
       });
@@ -34,8 +35,9 @@ const PriceTable: React.FC<PriceTableProps> = ({ comparisonData }) => {
 
     stores.forEach((store) => {
       if (
-        product.prices[store.id] && 
-        product.prices[store.id] < bestPrice
+        product.prices[store.id] !== undefined &&
+        product.prices[store.id] > 0 && // Ignorar preços R$ 0,00
+        product.prices[store.id] < bestPrice 
       ) {
         bestPrice = product.prices[store.id];
         bestStoreId = store.id;
@@ -51,7 +53,7 @@ const PriceTable: React.FC<PriceTableProps> = ({ comparisonData }) => {
     let highestTotal = 0;
 
     products.forEach((product, index) => {
-      const bestStoreId = findBestPriceStore(index);
+      const bestStoreId = findBestPriceStore(index); // Esta função já foi corrigida
       if (bestStoreId) {
         optimalTotal += product.prices[bestStoreId];
       }
@@ -59,16 +61,40 @@ const PriceTable: React.FC<PriceTableProps> = ({ comparisonData }) => {
 
     // Find highest total among all stores
     const totalsByStore = calculateTotalByStore();
-    highestTotal = Math.max(...Object.values(totalsByStore));
+    // Garantir que Math.max não receba um array vazio ou apenas com -Infinity
+    const validTotalsForMax = Object.values(totalsByStore).filter(total => typeof total === 'number');
+    if (validTotalsForMax.length > 0) {
+      highestTotal = Math.max(0, ...validTotalsForMax); // Usar 0 como base caso todos os totais sejam negativos (improvável)
+    } else {
+      highestTotal = 0;
+    }
 
     return highestTotal - optimalTotal;
   };
 
   const totals = calculateTotalByStore();
-  const cheapestStoreId = Object.entries(totals).reduce(
-    (acc, [storeId, total]) => (total < totals[acc] ? storeId : acc),
-    stores[0]?.id
-  );
+  let cheapestStoreId: string | undefined = undefined;
+
+  if (stores.length > 0) {
+    let minTotal = Infinity;
+    let foundPositiveTotalStore = false;
+
+    stores.forEach(store => {
+      const total = totals[store.id];
+      if (total !== undefined && total > 0) { // Prioriza lojas com total > 0
+        if (total < minTotal) {
+          minTotal = total;
+          cheapestStoreId = store.id;
+          foundPositiveTotalStore = true;
+        }
+      }
+    });
+
+    // Se nenhuma loja com total > 0 foi encontrada, mas existem lojas e algumas têm total 0
+    if (!foundPositiveTotalStore && stores.some(store => totals[store.id] === 0)) {
+      cheapestStoreId = stores.find(store => totals[store.id] === 0)?.id;
+    }
+  }
 
   return (
     <div className="bg-white p-6 rounded-lg shadow">
@@ -86,7 +112,7 @@ const PriceTable: React.FC<PriceTableProps> = ({ comparisonData }) => {
                   {stores.find((s) => s.id === cheapestStoreId)?.name}
                 </p>
                 <p className="text-gray-500">
-                  Total: R$ {totals[cheapestStoreId].toFixed(2)}
+                  Total: R$ {(totals[cheapestStoreId] ?? 0).toFixed(2)}
                 </p>
               </div>
             ) : (
@@ -188,7 +214,7 @@ const PriceTable: React.FC<PriceTableProps> = ({ comparisonData }) => {
                       : ""
                   }`}
                 >
-                  R$ {totals[store.id].toFixed(2)}
+                  R$ {(totals[store.id] ?? 0).toFixed(2)}
                 </td>
               ))}
               <td className="py-2 px-4 border"></td>
