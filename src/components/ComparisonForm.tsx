@@ -37,12 +37,10 @@ const ComparisonForm: React.FC = () => {
         setComparisonData(parsedData);
       }
     } catch(erro){
-      console.error("Erro ao carregar dados do localStorage:", error);
-      toast({
-        title: "Error ao carregar dados",
-        description: "Não foi possível carregar os dados slavos anteriormente.",
-        variant: "destructive",
-      });
+      console.error("Erro ao carregar dados do localStorage:", erro);
+      toast.error("Erro ao carregar dados", {
+        description: "Não foi possível carregar os dados salvos anteriormente.",
+      })
     }
   }, []);
 
@@ -57,10 +55,8 @@ const ComparisonForm: React.FC = () => {
 
   const handleAddStore = () => {
     if (!storeName.trim()) {
-      toast({
-        title: "Erro",
+      toast.error("Erro",{
         description: "O nome do mercado não pode estar vazio",
-        variant: "destructive",
       });
       return;
     }
@@ -129,8 +125,7 @@ const ComparisonForm: React.FC = () => {
         ...comparisonData,
         products: updatedProducts,
       });
-      toast({
-        title: "Produto atualizado",
+      toast.success( "Produto atualizado",{
         description: `${newProduct.name} foi atualizado com sucesso.`,
       });
     } else {
@@ -139,8 +134,7 @@ const ComparisonForm: React.FC = () => {
         ...comparisonData,
         products: [...comparisonData.products, newProduct],
       });
-      toast({
-        title: "Produto adicionado",
+      toast.success( "Produto adicionado",{
         description: `${newProduct.name} foi adicionado com sucesso.`,
       });
     }
@@ -154,8 +148,7 @@ const ComparisonForm: React.FC = () => {
       ...comparisonData,
       products: updatedProducts,
     });
-    toast({
-      title: "Produto removido",
+    toast.info("Produto removido",{
       description: `${productName} foi removido da lista.`,
     });
   };
@@ -172,8 +165,7 @@ const ComparisonForm: React.FC = () => {
     // In a real app, you would save this data to a database or localStorage
     console.log("Saving comparison data:", updatedComparisonData);
     
-    toast({
-      title: "Comparação salva",
+    toast.success("Comparação salva", {
       description: `Sua comparação de preços foi salva com sucesso.`,
     });
   };
