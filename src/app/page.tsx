@@ -54,7 +54,7 @@ const Index: React.FC = () => {
         <div className="mt-20 bg-white p-8 rounded-lg shadow-md">
           <div className="flex flex-col md:flex-row items-center">
             <div className="md:w-1/2 mb-6 md:mb-0 md:pr-8">
-              <h2 className="text-2xl font-bold mb-4">Por que usar o Esperto Comparador?</h2>
+              <h2 className="text-2xl font-bold mb-4">Por que usar o Comparador online?</h2>
               <ul className="space-y-3">
                 <li className="flex items-start">
                   <span className="text-app-green font-bold mr-2">✓</span>
@@ -89,7 +89,7 @@ const Index: React.FC = () => {
         <div className="container mx-auto px-6">
           <div className="flex flex-col md:flex-row justify-between">
             <div className="mb-6 md:mb-0">
-              <h3 className="text-lg font-semibold mb-2">O Esperto Comparador</h3>
+              <h3 className="text-lg font-semibold mb-2">Comparador online</h3>
               <p className="text-gray-300">
                 Economize tempo e dinheiro nas suas compras de supermercado.
               </p>
@@ -114,7 +114,7 @@ const Index: React.FC = () => {
             </div>
           </div>
           <div className="border-t border-gray-700 mt-8 pt-6 text-center">
-            <p className="text-gray-300 text-sm">© 2025 O Esperto Comparador. Todos os direitos reservados.</p>
+            <p className="text-gray-300 text-sm">© 2025 Comparador online. Todos os direitos reservados.</p>
           </div>
         </div>
       </footer>

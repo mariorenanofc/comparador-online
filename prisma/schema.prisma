@@ -1,0 +1,58 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL") // Sua URL de conexão com o NeonDB estará aqui
+}
+
+model Product {
+  id        Int      @id @default(autoincrement())
+  name      String
+  quantity  Int
+  unit      String
+  prices    Price[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Comparison Comparison[]
+}
+
+model Store {
+  id     Int     @id @default(autoincrement())
+  name   String  @unique
+  prices Price[]
+}
+
+model Price {
+  id        Int      @id @default(autoincrement())
+  price     Float
+  productId Int
+  storeId   Int
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  store     Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([productId, storeId]) // Garante que um produto tenha um preço único por loja
+}
+
+model Comparison {
+  id        Int       @id @default(autoincrement())
+  products  Product[] // Produtos incluídos na comparação
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model MonthlyReport {
+  id              Int      @id @default(autoincrement())
+  year            Int
+  month           Int
+  totalSpent      Float    @default(0)
+  comparisonsMade Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@unique([year, month]) // Garante que haja apenas um relatório por mês e ano
+}
